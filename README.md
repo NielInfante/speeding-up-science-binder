@@ -4,34 +4,68 @@
 
 This repo contains data and codes to visualize taxa and KEGG functions as bar plots or heatmaps (with clustering). 
 
-* Thumbnail of expected Heatmap  
-[![Binder](https://raw.githubusercontent.com/zeyaxue/speeding-up-science-binder/master/figs/taxa_heat_thumb.png)]
+Speeding-up-science-metatranscriptomics-taxa-summary
+================
+Zeya Xue
+5/9/2019
 
+Speeding up science metatranscriptomics taxa summary
+====================================================
 
-* Thumbnail of expected bar plot   
+-   Written by Zhengyao "Zeya" Xue, [ORCID](https://orcid.org/0000-0002-4930-8212)
+-   The data files and R scripts can be found in this [GitHub repo](https://github.com/zeyaxue/speeding-up-science-binder)
+-   [Launch Binder](https://mybinder.org/v2/gh/zeyaxue/speeding-up-science-binder/master?urlpath=rstudio)
+-   [html version](https://github.com/zeyaxue/speeding-up-science-binder/blob/master/taxa-summary.md)
 
-```{r echo=FALSE, out.width='50%'}
-knitr::include_graphics("https://raw.githubusercontent.com/zeyaxue/speeding-up-science-binder/master/figs/unnamed-chunk-8-1.png")
-```
- 
-* P.S. The demonstration shown here is using data from [this paper](https://aem.asm.org/content/84/1/e02026-17.short)
+-   Thumbnail of expected Heatmap
 
-## Introduction
-The starting point of the workflow is 
-  + A count table, normalized or not. Looks like this:
-```{r echo=FALSE}
-TabTPM <- read.table(file.path("example_data/sample_TPM.tsv"),
-                     header = TRUE, sep = "\t")
-head(TabTPM)
-```
-  + A annotation or taxonomy table 
-```{r echo=FALSE}
-Tabanno <- read.table(file.path("example_data/sample_annotation_classifications.tsv"),
-                      header = TRUE, sep = "\t", na.strings = "<NA>")
-head(Tabanno)
-```
-  + A sample metainfo table 
-```{r echo=FALSE, warning=FALSE}
-samdf <- read.csv(file.path("example_data/Samdf.csv"))
-head(samdf)
-```
+<img src="https://raw.githubusercontent.com/zeyaxue/speeding-up-science-binder/master/figs/taxa_heat_thumb.png" width="50%" />
+
+-   Thumbnail of expected bar plot
+
+<img src="https://raw.githubusercontent.com/zeyaxue/speeding-up-science-binder/master/figs/unnamed-chunk-8-1.png" width="50%" />
+
+-   P.S. The demonstration shown here is using data from [this paper](https://aem.asm.org/content/84/1/e02026-17.short)
+
+Introduction
+------------
+
+The starting point of the workflow is + A count table, normalized or not. Looks like this:
+
+    ##      CDS_ID     Low_A    Low_B   High_A   High_B
+    ## 1   CDS_100 10.980509 8.364332 28.15585 0.000000
+    ## 2 CDS_10011  2.284764 1.522854 10.25240 0.000000
+    ## 3 CDS_10013  9.833839 6.554506  0.00000 0.000000
+    ## 4 CDS_10015  7.194288 2.501831  0.00000 0.000000
+    ## 5 CDS_10016  0.000000 0.000000 44.98916 0.000000
+    ## 6 CDS_10017 18.738610 6.516398  0.00000 7.725487
+
+-   A annotation or taxonomy table
+
+<!-- -->
+
+    ##      CDS_ID KO_ID  Domain        Phylum           Class              Order
+    ## 1  CDS_2383  <NA> Archaea Euryarchaeota    Methanococci    Methanococcales
+    ## 2  CDS_4184  <NA> Archaea Euryarchaeota Methanomicrobia  Methanosarcinales
+    ## 3  CDS_6601  <NA> Archaea Euryarchaeota Methanomicrobia  Methanosarcinales
+    ## 4  CDS_6904  <NA> Archaea Euryarchaeota    Methanococci    Methanococcales
+    ## 5  CDS_7927  <NA> Archaea Euryarchaeota    Halobacteria       Natrialbales
+    ## 6 CDS_15355  <NA> Archaea Euryarchaeota Methanomicrobia Methanomicrobiales
+    ##                  Family              Genus                     Species
+    ## 1 Methanocaldococcaceae Methanocaldococcus Methanocaldococcus_infernus
+    ## 2    Methanosarcinaceae     Methanosarcina      Methanosarcina_barkeri
+    ## 3    Methanosarcinaceae     Methanosarcina      Methanosarcina_barkeri
+    ## 4      Methanococcaceae      Methanococcus     Methanococcus_vannielii
+    ## 5         Natrialbaceae      Haloterrigena      Haloterrigena_jeotgali
+    ## 6   Methanomicrobiaceae     Methanolacinia  Methanolacinia_petrolearia
+
+-   A sample metainfo table
+
+<!-- -->
+
+    ##   SampleID Place Group
+    ## 1   High_A  High     A
+    ## 2   High_B  High     B
+    ## 3    Low_A   Low     A
+    ## 4    Low_B   Low     B
+
