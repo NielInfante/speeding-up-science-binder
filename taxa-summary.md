@@ -6,6 +6,24 @@ Zeya Xue
 Speeding up science metatranscriptomics taxa summary
 ====================================================
 
+-   Written by Zhengyao "Zeya" Xue, [ORCID](https://orcid.org/0000-0002-4930-8212)
+-   The data files and R scripts can be found in this [GitHub repo](https://github.com/zeyaxue/speeding-up-science-binder)
+-   [Launch Binder](https://mybinder.org/v2/gh/zeyaxue/speeding-up-science-binder/master?urlpath=rstudio)
+-   [html version](https://github.com/zeyaxue/speeding-up-science-binder/blob/master/taxa-summary.md)
+
+-   Thumbnail of expected Heatmap
+
+<img src="https://raw.githubusercontent.com/zeyaxue/speeding-up-science-binder/master/figs/taxa_heat_thumb.png" width="50%" />
+
+-   Thumbnail of expected bar plot
+
+<img src="https://raw.githubusercontent.com/zeyaxue/speeding-up-science-binder/master/figs/unnamed-chunk-8-1.png" width="50%" />
+
+-   P.S. The demonstration shown here is using data from [this paper](https://aem.asm.org/content/84/1/e02026-17.short)
+
+Introduction
+------------
+
 The starting point of the workflow is + A count table, normalized or not. Looks like this:
 
     ##      CDS_ID     Low_A    Low_B   High_A   High_B
@@ -44,14 +62,6 @@ The starting point of the workflow is + A count table, normalized or not. Looks 
     ## 2   High_B  High     B
     ## 3    Low_A   Low     A
     ## 4    Low_B   Low     B
-
--   Written by Zhengyao "Zeya" Xue, [ORCID](https://orcid.org/0000-0002-4930-8212)
--   The data files and R scripts can be found in this [GitHub repo](https://github.com/zeyaxue/speeding-up-science-binder)
--   [Launch Binder](https://mybinder.org/v2/gh/zeyaxue/speeding-up-science-binder/master?urlpath=rstudio)
--   [html version](https://github.com/zeyaxue/speeding-up-science-binder/blob/master/taxa-summary.md)
--   Thumbnail of expected plots <img src="figs/taxa_heat_thumb.png" width="50%" /><img src="figs/taxa_bar_thumb.png" width="50%" />
-
--   P.S. The demonstration shown here is using data from [this paper](https://aem.asm.org/content/84/1/e02026-17.short)
 
 Load packages and setting up
 ----------------------------
@@ -235,7 +245,7 @@ superheat(taxa.cast30,
           grid.vline.col = "white") 
 ```
 
-![](figs/unnamed-chunk-7-1.png)
+![](figs/unnamed-chunk-9-1.png)
 
 Stack bar plot
 --------------
@@ -290,4 +300,4 @@ ggplot(taxa.agg, aes(x = SampleID, y = Abundance, fill = REC)) +
   ylab("Relative Abundance \n")
 ```
 
-![](figs/unnamed-chunk-8-1.png)
+![](figs/unnamed-chunk-10-1.png)

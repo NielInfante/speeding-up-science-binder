@@ -6,6 +6,17 @@ Zeya Xue
 Speeding up science metatranscriptomics taxa summary
 ====================================================
 
+-   Written by Zhengyao "Zeya" Xue, [ORCID](https://orcid.org/0000-0002-4930-8212)
+-   The data files and R scripts can be found in this [GitHub repo](https://github.com/zeyaxue/speeding-up-science-binder)
+-   [Launch Binder](https://mybinder.org/v2/gh/zeyaxue/speeding-up-science-binder/master?urlpath=rstudio)
+-   [html version](https://github.com/zeyaxue/speeding-up-science-binder/blob/master/taxa-summary.md)
+
+-   Thumbnail of expected Heatmap
+
+<img src="https://raw.githubusercontent.com/zeyaxue/speeding-up-science-binder/master/figs/unnamed-chunk-5-1.png" width="50%" />
+
+-   P.S. The demonstration shown here is using data from [this paper](https://aem.asm.org/content/84/1/e02026-17.short)
+
 Introduction
 ------------
 
@@ -18,16 +29,6 @@ The starting point of the workflow is a normailzed KEGG module table
     ## 4            Photosynthesis  6553.32 40847.12 55201.64 129825.94
     ## 5             ATP_synthesis 58850.99 45995.37 49470.13  50600.52
     ## 6 Oxidative_phosphorylation 67116.60 54022.28 55510.65  54980.40
-
--   Written by Zhengyao "Zeya" Xue, [ORCID](https://orcid.org/0000-0002-4930-8212)
--   The data files and R scripts can be found in this [GitHub repo](https://github.com/zeyaxue/speeding-up-science-binder)
--   [Launch Binder](https://mybinder.org/v2/gh/zeyaxue/speeding-up-science-binder/master?urlpath=rstudio)
--   [html version](https://github.com/zeyaxue/speeding-up-science-binder/blob/master/taxa-summary.md)
-
-<center>
-<img src="https://raw.githubusercontent.com/zeyaxue/speeding-up-science-binder/master/figs/unnamed-chunk-3-1.png">
-</center>
--   P.S. The demonstration shown here is using data from [this paper](https://aem.asm.org/content/84/1/e02026-17.short)
 
 Load packages and setting up
 ----------------------------

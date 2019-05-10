@@ -11,6 +11,26 @@ knitr::opts_chunk$set(fig.path = "figs/")
 ```
 
 #  Speeding up science metatranscriptomics taxa summary
+* Written by Zhengyao "Zeya" Xue, [ORCID](https://orcid.org/0000-0002-4930-8212) 
+* The data files and R scripts can be found in this [GitHub repo](https://github.com/zeyaxue/speeding-up-science-binder)
+* [Launch Binder](https://mybinder.org/v2/gh/zeyaxue/speeding-up-science-binder/master?urlpath=rstudio)
+* [html version](https://github.com/zeyaxue/speeding-up-science-binder/blob/master/taxa-summary.md)
+
+* Thumbnail of expected Heatmap  
+
+```{r echo=FALSE, out.width='50%'}
+knitr::include_graphics("https://raw.githubusercontent.com/zeyaxue/speeding-up-science-binder/master/figs/taxa_heat_thumb.png")
+```
+
+* Thumbnail of expected bar plot   
+
+```{r echo=FALSE, out.width='50%'}
+knitr::include_graphics("https://raw.githubusercontent.com/zeyaxue/speeding-up-science-binder/master/figs/unnamed-chunk-8-1.png")
+```
+ 
+* P.S. The demonstration shown here is using data from [this paper](https://aem.asm.org/content/84/1/e02026-17.short)
+
+## Introduction
 The starting point of the workflow is 
   + A count table, normalized or not. Looks like this:
 ```{r echo=FALSE}
@@ -29,21 +49,6 @@ head(Tabanno)
 samdf <- read.csv(file.path("example_data/Samdf.csv"))
 head(samdf)
 ```
-
-
-* Written by Zhengyao "Zeya" Xue, [ORCID](https://orcid.org/0000-0002-4930-8212) 
-* The data files and R scripts can be found in this [GitHub repo](https://github.com/zeyaxue/speeding-up-science-binder)
-* [Launch Binder](https://mybinder.org/v2/gh/zeyaxue/speeding-up-science-binder/master?urlpath=rstudio)
-* [html version](https://github.com/zeyaxue/speeding-up-science-binder/blob/master/taxa-summary.md)
-* Thumbnail of expected plots 
-
-```{r pressure, echo=FALSE, out.width = '50%'}
-knitr::include_graphics("figs/taxa_heat_thumb.png")
-knitr::include_graphics("figs/taxa_bar_thumb.png")
-```
-
- 
-* P.S. The demonstration shown here is using data from [this paper](https://aem.asm.org/content/84/1/e02026-17.short)
 
 
 ## Load packages and setting up
