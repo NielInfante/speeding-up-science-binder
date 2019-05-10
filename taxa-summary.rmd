@@ -35,13 +35,12 @@ head(samdf)
 * The data files and R scripts can be found in this [GitHub repo](https://github.com/zeyaxue/speeding-up-science-binder)
 * [Launch Binder](https://mybinder.org/v2/gh/zeyaxue/speeding-up-science-binder/master?urlpath=rstudio)
 * [html version](https://github.com/zeyaxue/speeding-up-science-binder/blob/master/taxa-summary.md)
-* ![Preview]()
  
 * P.S. The demonstration shown here is using data from [this paper](https://aem.asm.org/content/84/1/e02026-17.short)
 
 
 ## Load packages and setting up
-```{r warning=FALSE}
+```{r message=FALSE, warning=FALSE}
 library(phyloseq);packageVersion("phyloseq")
 library(DESeq2);packageVersion("DESeq2")
 library(ggplot2)
@@ -131,9 +130,6 @@ RECps <- function(ps) {
 
 ps.REC <- RECps(ps)
 ps.REC # 20000 taxa and 4 samples 
-
-ps.REC@tax_table
-
 ```
 
 
