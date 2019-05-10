@@ -10,10 +10,8 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(fig.path = "figs/")
 ```
 
-Written by Zhengyao "Zeya" Xue, [ORCID](https://orcid.org/0000-0002-4930-8212)
-
-## Introduction
-* The starting point of the workflow is 
+#  Speeding up science metatranscriptomics taxa summary
+The starting point of the workflow is 
   + A count table, normalized or not. Looks like this:
 ```{r echo=FALSE}
 TabTPM <- read.table(file.path("example_data/sample_TPM.tsv"),
@@ -32,12 +30,18 @@ samdf <- read.csv(file.path("example_data/Samdf.csv"))
 head(samdf)
 ```
 
-* The demonstration shown here is using data from [this paper](https://aem.asm.org/content/84/1/e02026-17.short)
 
-* The data files and R scripts can be found in this [Binder-GitHub repo](https://github.com/zeyaxue/speeding-up-science-binder)
+* Written by Zhengyao "Zeya" Xue, [ORCID](https://orcid.org/0000-0002-4930-8212) 
+* The data files and R scripts can be found in this [GitHub repo](https://github.com/zeyaxue/speeding-up-science-binder)
+* [Launch Binder](https://mybinder.org/v2/gh/zeyaxue/speeding-up-science-binder/master?urlpath=rstudio)
+* [html version](https://github.com/zeyaxue/speeding-up-science-binder/blob/master/taxa-summary.md)
+* ![Preview]()
+ 
+* P.S. The demonstration shown here is using data from [this paper](https://aem.asm.org/content/84/1/e02026-17.short)
+
 
 ## Load packages and setting up
-```{r}
+```{r warning=FALSE}
 library(phyloseq);packageVersion("phyloseq")
 library(DESeq2);packageVersion("DESeq2")
 library(ggplot2)
@@ -45,6 +49,7 @@ library(reshape2)
 library(superheat)
 library(plyr)
 library(dplyr)
+library(RColorBrewer)
 ```
 
 ## Import files to create phyloseq object
@@ -73,7 +78,7 @@ ps # 20000 taxa and 4 samples
 ```
 
 ## Optional taxonomy level clean up
-```{r}
+```{r warning=FALSE}
 # Define function to get the deepest taxa assignment level
 RECps <- function(ps) {
   TaxTab2 <- as.data.frame(ps@tax_table)
@@ -86,22 +91,22 @@ RECps <- function(ps) {
   list.p = as.character(TaxTab2$Phylum)
   list.k = as.character(TaxTab2$Kingdom)
   list.d = as.character(TaxTab2$Domain)
-  list.REC = character(length(as.character(TaxTab2$Species)))
+  list.REC = character(length(as.character(TaxTab2$Domain)))
   
   for(i in 1:dim(TaxTab2)[1]){
-    S = which(TaxTab2$Species[i] == "")
-    G = which(TaxTab2$Genus[i] == "")
-    F = which(TaxTab2$Family[i] == "")
-    O = which(TaxTab2$Order[i] == "")
-    C = which(TaxTab2$Class[i] == "")
-    P = which(TaxTab2$Phylum[i] == "")
-    K = which(TaxTab2$Kingdom[i] == "")
-    D = which(TaxTab2$Domain[i] == "")
+    S = which(TaxTab2$Species[i] == "" | is.na(TaxTab2$Species[i]))
+    G = which(TaxTab2$Genus[i] == "" | is.na(TaxTab2$Genus[i]))
+    Fa = which(TaxTab2$Family[i] == "" | is.na(TaxTab2$Family[i]))
+    O = which(TaxTab2$Order[i] == "" | is.na(TaxTab2$Order[i]))
+    C = which(TaxTab2$Class[i] == "" | is.na(TaxTab2$Class[i]))
+    P = which(TaxTab2$Phylum[i] == "" | is.na(TaxTab2$Phylum[i]))
+    K = which(TaxTab2$Kingdom[i] == "" | is.na(TaxTab2$Kingdom[i]))
+    D = which(TaxTab2$Domain[i] == "" | is.na(TaxTab2$Domain[i]))
     if(length(S) == 0){
       list.REC[i] <- list.s[i]
     } else if(length(G) == 0){
       list.REC[i] <- list.g[i]
-    } else if(length(F) == 0){
+    } else if(length(Fa) == 0){
       list.REC[i] <- list.f[i]
     } else if(length(O) == 0){
       list.REC[i] <- list.o[i]
@@ -113,27 +118,32 @@ RECps <- function(ps) {
       list.REC[i] <- list.k[i]
     } else if(length(D) == 0){
       list.REC[i] <- list.d[i]
-    } else
+    } else {
       list.REC[i] <- "meow"
+    }
   }
   
   TaxTab2$REC <- list.REC
   TaxTab2$REC <- factor(TaxTab2$REC)
-  merge_phyloseq(ps, TaxTab2 %>% as.matrix() %>% tax_table())
+  phyloseq(otu_table(ps), sample_data(ps),
+           TaxTab2 %>% as.matrix() %>% tax_table())
 }
 
 ps.REC <- RECps(ps)
 ps.REC # 20000 taxa and 4 samples 
+
+ps.REC@tax_table
+
 ```
 
 
 ## Heat map 
-```{r, fig.height = 12, fig.width = 10}
-# Run the next line if want relative abundance 
-ps.REC.per <- ps.REC %>% transform_sample_counts(function(x) x/sum(x) )  
+```{r, fig.height = 13, fig.width = 10}
 # Clean up the taxonomy 
-ps.REC.glom <- ps.REC.per %>% tax_glom(taxrank = "REC", NArm = FALSE)
-taxa.df <- psmelt(ps.REC.glom)  # melt ps object 
+ps.REC.glom <- ps.REC %>% tax_glom(taxrank = "REC", NArm = FALSE)
+# Run the next line if want relative abundance 
+ps.REC.per <- ps.REC.glom %>% transform_sample_counts(function(x) x/sum(x) )  
+taxa.df <- psmelt(ps.REC.per)  # melt ps object 
 # aggregate for REC level plot
 taxa.agg <- aggregate(Abundance ~ REC + SampleID,
                       data = taxa.df,
@@ -178,5 +188,56 @@ superheat(taxa.cast30,
 ```
 
 
+## Stack bar plot 
+```{r}
+# Clean up the taxonomy 
+ps.REC.glom <- ps.REC %>% tax_glom(taxrank = "REC", NArm = FALSE)
+# Run the next line if want relative abundance 
+ps.REC.per <- ps.REC.glom %>% transform_sample_counts(function(x) x/sum(x) )  
+taxa.df <- psmelt(ps.REC.per)  # melt ps object 
+# aggregate for REC level plot
+taxa.agg <- aggregate(Abundance ~ REC + SampleID,
+                      data = taxa.df,
+                      mean)
+
+# Get the names of the most abundant 15 taxa 
+ps.Notop15 <- prune_taxa(names(sort(taxa_sums(ps.REC.per), TRUE)[16:nrow(ps.REC.per@tax_table)]), ps.REC.per)
+taxa_names_filt <- ps.Notop15@tax_table[,8] %>% as.character() # 8 for REC level 
+# convert REC colum to a character vector from a factor because R
+taxa.agg$REC <- as.character(taxa.agg$REC)
+# change the less abundant taxa names to "Other"
+taxa.agg[taxa.agg$REC %in% taxa_names_filt,]$REC <- "Other"
+
+# Set colors for plotting
+mycol = colorRampPalette(brewer.pal(12, "Paired"))(16)
+
+# Set levels of taxon for pretty plots 
+## I do not know this beforehand, modified after 1st generating plot to know the 
+## taxa names
+taxa.agg$REC = factor(taxa.agg$REC, levels = c("Alteromonas_macleodii",
+                                               "Anaerophaga_thermohalophila",
+                                               "Aureispira_sp._CCB-QB1",
+                                               "Bacteroides_fragilis",
+                                               "Dyadobacter_alkalitolerans",
+                                               "Escherichia_coli",
+                                               "Haliscomenobacter_hydrossis",
+                                               "Lacinutrix_himadriensis",
+                                               "Lewinella_cohaerens",
+                                               "Nitrosomonas_communis",
+                                               "Phaeodactylibacter_xiamenensis",
+                                               "Salinibacter_ruber",
+                                               "Saprospira_grandis",
+                                                "Synechococcus_sp._BL107",
+                                                "Synechococcus_sp._CC9605",
+                                                "Other"))
+
+ggplot(taxa.agg, aes(x = SampleID, y = Abundance, fill = REC)) + 
+  geom_bar(stat = "identity") +  #position = "fill" is for making the bar 100% 
+  scale_fill_manual(values = mycol)+
+  theme(axis.title.x = element_blank()) +   # Remove x axis title
+  guides(fill = guide_legend(reverse = FALSE, keywidth = 1, keyheight = 1)) +
+  ylab("Relative Abundance \n")
+
+```
 
 

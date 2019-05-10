@@ -1,4 +1,5 @@
-pkgs = c("knitr", "rmarkdown", "ggplot2", "ggpubr", "reshape2","cowplot","superheat","plyr","dplyr")
+pkgs = c("knitr", "rmarkdown", "ggplot2", "ggpubr", "reshape2","cowplot",
+         "superheat","plyr","dplyr","RColorBrewer")
 ncores = parallel::detectCores()
 install.packages(pkgs, Ncpus = ncores)
 
