@@ -49,6 +49,7 @@ The starting point of the workflow is + A count table, normalized or not. Looks 
 -   The data files and R scripts can be found in this [GitHub repo](https://github.com/zeyaxue/speeding-up-science-binder)
 -   [Launch Binder](https://mybinder.org/v2/gh/zeyaxue/speeding-up-science-binder/master?urlpath=rstudio)
 -   [html version](https://github.com/zeyaxue/speeding-up-science-binder/blob/master/taxa-summary.md)
+-   Thumbnail of expected plots <img src="figs/taxa_heat_thumb.png" width="50%" /><img src="figs/taxa_bar_thumb.png" width="50%" />
 
 -   P.S. The demonstration shown here is using data from [this paper](https://aem.asm.org/content/84/1/e02026-17.short)
 

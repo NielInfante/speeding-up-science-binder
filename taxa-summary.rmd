@@ -35,6 +35,13 @@ head(samdf)
 * The data files and R scripts can be found in this [GitHub repo](https://github.com/zeyaxue/speeding-up-science-binder)
 * [Launch Binder](https://mybinder.org/v2/gh/zeyaxue/speeding-up-science-binder/master?urlpath=rstudio)
 * [html version](https://github.com/zeyaxue/speeding-up-science-binder/blob/master/taxa-summary.md)
+* Thumbnail of expected plots 
+
+```{r pressure, echo=FALSE, out.width = '50%'}
+knitr::include_graphics("figs/taxa_heat_thumb.png")
+knitr::include_graphics("figs/taxa_bar_thumb.png")
+```
+
  
 * P.S. The demonstration shown here is using data from [this paper](https://aem.asm.org/content/84/1/e02026-17.short)
 
