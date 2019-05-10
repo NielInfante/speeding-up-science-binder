@@ -3,6 +3,21 @@ Speeding-up-science-metatranscriptomics-function-summary
 Zeya Xue
 5/10/2019
 
+Written by Zhengyao "Zeya" Xue, [ORCID](https://orcid.org/0000-0002-4930-8212)
+
+Introduction
+------------
+
+The starting point of the workflow is a normailzed KEGG module table
+
+    ##                 KEGG_module    Low_A    Low_B   High_A    High_B
+    ## 1       Nitrogen_metabolism   399.25   199.20   130.59      0.00
+    ## 2        Methane_metabolism 17121.72 20633.81 31785.74  16822.52
+    ## 3         Sulfur_metabolism  5320.98  6077.40  5762.23   4580.87
+    ## 4            Photosynthesis  6553.32 40847.12 55201.64 129825.94
+    ## 5             ATP_synthesis 58850.99 45995.37 49470.13  50600.52
+    ## 6 Oxidative_phosphorylation 67116.60 54022.28 55510.65  54980.40
+
 Load packages and setting up
 ----------------------------
 
@@ -45,4 +60,4 @@ superheat(KeggTPM,
 
     ## Warning: package 'bindrcpp' was built under R version 3.4.4
 
-![](figs/unnamed-chunk-3-1.png)
+![](figs/unnamed-chunk-4-1.png)

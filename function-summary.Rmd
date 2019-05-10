@@ -10,6 +10,26 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(fig.path = "figs/")
 ```
 
+
+#  Speeding up science metatranscriptomics taxa summary
+## Introduction
+The starting point of the workflow is a normailzed KEGG module table
+```{r echo=FALSE, warning=FALSE}
+KeggTPM <- read.table(file.path("example_data/KEGG_module_TPM.tsv"),
+                      header = TRUE, sep = "\t")
+head(KeggTPM)
+```
+
+
+* Written by Zhengyao "Zeya" Xue, [ORCID](https://orcid.org/0000-0002-4930-8212) 
+* The data files and R scripts can be found in this [GitHub repo](https://github.com/zeyaxue/speeding-up-science-binder)
+* [Launch Binder](https://mybinder.org/v2/gh/zeyaxue/speeding-up-science-binder/master?urlpath=rstudio)
+* [html version](https://github.com/zeyaxue/speeding-up-science-binder/blob/master/taxa-summary.md)
+* ![Preview]()
+ 
+* P.S. The demonstration shown here is using data from [this paper](https://aem.asm.org/content/84/1/e02026-17.short)
+
+
 ## Load packages and setting up
 ```{r}
 library(superheat)
