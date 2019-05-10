@@ -1,7 +1,6 @@
 ---
 title: "Speeding-up-science-metatranscriptomics-taxa-summary"
 author: "Zeya Xue"
-ORCID: (https://orcid.org/0000-0002-4930-8212)
 date: "5/9/2019"
 output: rmarkdown::github_document
 ---
@@ -10,6 +9,32 @@ output: rmarkdown::github_document
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(fig.path = "figs/")
 ```
+
+Written by Zhengyao "Zeya" Xue, [ORCID](https://orcid.org/0000-0002-4930-8212)
+
+## Introduction
+* The starting point of the workflow is 
+  + A count table, normalized or not. Looks like this:
+```{r echo=FALSE}
+TabTPM <- read.table(file.path("example_data/sample_TPM.tsv"),
+                     header = TRUE, sep = "\t")
+head(TabTPM)
+```
+  + A annotation or taxonomy table 
+```{r echo=FALSE}
+Tabanno <- read.table(file.path("example_data/sample_annotation_classifications.tsv"),
+                      header = TRUE, sep = "\t", na.strings = "<NA>")
+head(Tabanno)
+```
+  + A sample metainfo table 
+```{r echo=FALSE, warning=FALSE}
+samdf <- read.csv(file.path("example_data/Samdf.csv"))
+head(samdf)
+```
+
+* The demonstration shown here is using data from [this paper](https://aem.asm.org/content/84/1/e02026-17.short)
+
+* The data files and R scripts can be found in this [Binder-GitHub repo](https://github.com/zeyaxue/speeding-up-science-binder)
 
 ## Load packages and setting up
 ```{r}
@@ -23,14 +48,6 @@ library(dplyr)
 ```
 
 ## Import files to create phyloseq object
-The starting point of the workflow is 
-- 1. A count table, normalized or not 
-- 2. A annotation or taxonomy table 
-- 3. A sample metainfo table 
-
-The demonstration shown here is using data from [this paper](https://aem.asm.org/content/84/1/e02026-17.short)
-
-The data files and R scripts can be found in this [Binder-GitHub repo](https://github.com/zeyaxue/speeding-up-science-binder)
 ```{r}
 # The otu table slot of phyloseq object 
 TabTPM <- read.table(file.path("example_data/sample_TPM.tsv"),
@@ -111,58 +128,55 @@ ps.REC # 20000 taxa and 4 samples
 
 
 ## Heat map 
-```{r}
-# Define function to create heatmap per SampleID
-IDHeat <- function(ps) {
-  my_palette <- colorRampPalette(c("red", "yellow", "green"))(n = 299)
-  # defines the color breaks manually for a "skewed" color transition
-  col_breaks = c(seq(-1,0,length=100),      # for red
-                 seq(0.01,0.8,length=100),  # for yellow
-                 seq(0.81,1,length=100))    # for green
+```{r, fig.height = 12, fig.width = 10}
+# Run the next line if want relative abundance 
+ps.REC.per <- ps.REC %>% transform_sample_counts(function(x) x/sum(x) )  
+# Clean up the taxonomy 
+ps.REC.glom <- ps.REC.per %>% tax_glom(taxrank = "REC", NArm = FALSE)
+taxa.df <- psmelt(ps.REC.glom)  # melt ps object 
+# aggregate for REC level plot
+taxa.agg <- aggregate(Abundance ~ REC + SampleID,
+                      data = taxa.df,
+                      mean)
+taxa.cast <- dcast(taxa.agg, REC ~ SampleID, mean, value.var = "Abundance")
 
-  # Run the next line if want relative abundance 
-  ps <- ps %>% transform_sample_counts(function(x) x/sum(x) )  
-  
-  # Clean up the taxonomy 
-  ps.glom <- ps %>% tax_glom(taxrank = "REC", NArm = FALSE)
-  
-  taxa.df <- psmelt(ps.glom)
-  
-  # REC level plot
-  taxa.agg <- aggregate(Abundance ~ REC + SampleID,
-                        data = taxa.df,
-                        mean)
-  taxa.cast <- dcast(taxa.agg, REC ~ SampleID, mean, value.var = "Abundance")
-  
-  # only plot the top 30 most abundant taxa 
-  # need to change results from factor to numeric because of R
-  row.names(taxa.cast) <- taxa.cast$REC
-  taxa.cast <- taxa.cast[, -1]
-  indx <- sapply(taxa.cast, is.factor)
-  taxa.cast[indx] <- lapply(taxa.cast[indx], function(x) as.numeric(as.character(x))) 
-  taxa.cast30 <- cbind(taxa.cast, total = rowSums(taxa.cast)) #  need numeric values
-  taxa.cast30$taxa <- rownames(taxa.cast30)
-  taxa.cast30 <- head(arrange(taxa.cast30,desc(total)), n = 30)
-  row.names(taxa.cast30) <- taxa.cast30$taxa
-  taxa.cast30 <- taxa.cast30[, -c(5,6)] # remove total and taxa name colums
-  
-  superheat(taxa.cast30,
-            # retain original order of rows/cols
-            pretty.order.rows = TRUE,
-            pretty.order.cols = TRUE,
-            row.dendrogram = TRUE,
-            grid.hline = TRUE,
-            row.title = "Annotation",
-            column.title = "SampleID",
-            left.label.text.size = 2,
-            bottom.label.text.size = 4,
-            # change the grid color to white (more pretty on a dark background)
-            grid.hline.col = "white",
-            grid.vline.col = "white") 
-}
+# Define palette 
+my_palette <- colorRampPalette(c("red", "yellow", "green"))(n = 299)
+# defines the color breaks manually for a "skewed" color transition
+col_breaks = c(seq(-1,0,length=100),      # for red
+               seq(0.01,0.8,length=100),  # for yellow
+               seq(0.81,1,length=100))    # for green
 
-IDHeat(ps.REC)
+# only plot the top 30 most abundant taxa 
+# need to change results from factor to numeric because of R
+row.names(taxa.cast) <- taxa.cast$REC
+taxa.cast <- taxa.cast[, -1]
+indx <- sapply(taxa.cast, is.factor)
+taxa.cast[indx] <- lapply(taxa.cast[indx], function(x) as.numeric(as.character(x))) 
+taxa.cast30 <- cbind(taxa.cast, total = rowSums(taxa.cast)) #  need numeric values
+taxa.cast30$taxa <- rownames(taxa.cast30)
+taxa.cast30 <- head(arrange(taxa.cast30,desc(total)), n = 30)
+row.names(taxa.cast30) <- taxa.cast30$taxa
+taxa.cast30 <- taxa.cast30[, -c(5,6)] # remove total and taxa name colums
+  
+superheat(taxa.cast30,
+          # retain original order of rows/cols
+          pretty.order.rows = TRUE,
+          pretty.order.cols = TRUE,
+          row.dendrogram = TRUE,
+          col.dendrogram = TRUE,
+          grid.hline = TRUE,
+          row.title = "Annotation",
+          column.title = "SampleID",
+          left.label.text.size = 4,
+          bottom.label.text.size = 5,
+          left.label.size = 0.5,
+          # change the grid color to white (more pretty on a dark background)
+          grid.hline.col = "white",
+          grid.vline.col = "white") 
+
 ```
+
 
 
 
