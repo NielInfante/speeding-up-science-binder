@@ -5,10 +5,8 @@
 This repo contains data and codes to visualize taxa and KEGG functions as bar plots or heatmaps (with clustering). 
 
 * Thumbnail of expected Heatmap  
+(https://raw.githubusercontent.com/zeyaxue/speeding-up-science-binder/master/figs/taxa_heat_thumb.png)
 
-```{r echo=FALSE, out.width='50%'}
-knitr::include_graphics("https://raw.githubusercontent.com/zeyaxue/speeding-up-science-binder/master/figs/taxa_heat_thumb.png")
-```
 
 * Thumbnail of expected bar plot   
 
